@@ -1,5 +1,4 @@
 class IRobot:
-
     def __init__(self, coordinate_x = 0.0, coordinate_y = 0.0, coordinate_theta = 0.0, dimensions = {"width" : 40, "height" : 60}, color = (0, 0, 255)):
         self.coordinate_x = coordinate_x
         self.coordinate_y = coordinate_y
