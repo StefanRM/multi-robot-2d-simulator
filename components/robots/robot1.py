@@ -5,9 +5,10 @@ class Robot1(irobot.IRobot):
 
     # TODO: use pose
     # TODO: why do you need a color and dimensions here?
-    # TODO: what is the model of this robot (differential, omnidirectional, acherman )?
+    # TODO: what is the model of this robot, is it None (i.e. interface)
+    #  or something along the lines of differential, omnidirectional, acherman, etc... ?
 
-    # Note: A generic interface only has ONLY a robot model attribute set to None.
+    # Note: A generic interface ONLY has a robot model attribute set to None.
     # A implementation of the interface has a model model which contains two parts
     # a navigation part (pose and commands) and a sensor part (e.g. distance, camera, IMU, etc...)
     # In the case of a unicycle the navigation part describes the differential drive, where
