@@ -29,6 +29,9 @@ class Gui:
         self.window = pygame.display.set_mode((width, height))
         pygame.display.set_caption(caption)
 
+        # robot symbol
+        self.robot_img = pygame.image.load("resources/robot_model_04.png")
+
     def toggle_display_traces(self):
         self.display_traces = not self.display_traces
     
@@ -69,8 +72,9 @@ class Gui:
             self.window.fill(self.background_color)
 
         robots = world.get_robots()
+        robots_colors = world.get_robots_colors()
 
-        for robot in robots:
+        for it, robot in enumerate(robots):
             trace = robot.get_trace()
             x = robot.get_coordinate_x()
             y = robot.get_coordinate_y()
@@ -85,7 +89,7 @@ class Gui:
                     (c, d) = trace[i + 1]
                     start = (a + width / 2, b + height / 2)
                     stop = (c + width / 2, d + height / 2)
-                    pygame.draw.line(self.window, robot.get_color(), start, stop, TRACE_LINE_WIDTH)
+                    pygame.draw.line(self.window, robots_colors[it], start, stop, TRACE_LINE_WIDTH)
             
         for robot in robots:
             x = robot.get_coordinate_x()
@@ -94,7 +98,11 @@ class Gui:
             width = dimension["width"]
             height = dimension["height"]
 
-            pygame.draw.rect(self.window, robot.get_color(), (x, y, width, height))
+            # pygame.draw.rect(self.window, robot.get_color(), (x, y, width, height))
+            theta = robot.get_coordinate_theta()
+            surf = pygame.transform.scale(self.robot_img, (width, height))
+            surf = pygame.transform.rotate(surf, -theta)
+            self.window.blit(surf, (x, y))
 
         pygame.display.update()
 

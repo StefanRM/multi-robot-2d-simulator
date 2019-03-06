@@ -7,8 +7,8 @@ if __name__ == '__main__':
     world = world.World(0.05)
     gui = gui.Gui(period = 50, background_color = (255, 255, 255), width = 1080, height = 720, grid_color = (211, 211, 211))
 
-    world.add_robot(robot1.Robot1(coordinate_x = 300, coordinate_y = 200, dimensions = {"width" : 20, "height" : 20}, color = (0, 0, 255)))
-    # world.add_robot(robot2.Robot2(coordinate_x = 300, coordinate_y = 300, dimensions = {"width" : 20, "height" : 20}, color = (0, 255, 0)))
+    world.add_robot(robot1.Robot1(coordinate_x = 300, coordinate_y = 200, dimensions = {"width" : 20, "height" : 20}), color = (0, 0, 255))
+    world.add_robot(robot2.Robot2(coordinate_x = 300, coordinate_y = 300, dimensions = {"width" : 20, "height" : 20}), color = (0, 255, 0))
 
     last_time = 0
 

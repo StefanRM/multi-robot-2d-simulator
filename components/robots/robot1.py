@@ -4,7 +4,7 @@ import math
 class Robot1(irobot.IRobot):
 
     # TODO: use pose
-    # TODO: why do you need a color and dimensions here?
+    # TODO: why do you need a color and dimensions here? -> checked
     # TODO: what is the model of this robot, is it None (i.e. interface)
     #  or something along the lines of differential, omnidirectional, acherman, etc... ?
 
@@ -15,7 +15,7 @@ class Robot1(irobot.IRobot):
     # you can give the robots commands (v, omega) and can request its pose (x, y, theta).
 
     def __init__(self, coordinate_x = 0.0, coordinate_y = 0.0, coordinate_theta = 0.0, dimensions = {"width" : 40, "height" : 60}, color = (0, 255, 0)):
-        super().__init__(coordinate_x, coordinate_y, coordinate_theta, dimensions, color)
+        super().__init__(coordinate_x, coordinate_y, coordinate_theta, dimensions)
 
     def move(self):
         theta = math.radians(self.coordinate_theta)

@@ -7,8 +7,12 @@ class World():
         self.robots = []
         self.obstacles = []
 
-    def add_robot(self, robot):
+        # robots' colors (representation)
+        self.robots_colors = []
+
+    def add_robot(self, robot, color = (0, 0, 255)):
         self.robots.append(robot)
+        self.robots_colors.append(color)
     
     def add_obstacle(self, obstacle):
         self.obstacles.append(obstacle)
@@ -21,6 +25,9 @@ class World():
     
     def get_obstacles(self):
         return self.obstacles
+
+    def get_robots_colors(self):
+        return self.robots_colors
 
     def step(self):
         for robot in self.robots:

@@ -1,5 +1,5 @@
 class IRobot:
-    def __init__(self, coordinate_x = 0.0, coordinate_y = 0.0, coordinate_theta = 0.0, dimensions = {"width" : 40, "height" : 60}, color = (0, 0, 255)):
+    def __init__(self, coordinate_x = 0.0, coordinate_y = 0.0, coordinate_theta = 0.0, dimensions = {"width" : 40, "height" : 60}):
         self.coordinate_x = coordinate_x
         self.coordinate_y = coordinate_y
         self.coordinate_theta = coordinate_theta
@@ -9,8 +9,6 @@ class IRobot:
         self.sensors = []
         self.controllers = []
         self.trace = [(coordinate_x, coordinate_y), (coordinate_x, coordinate_y)]
-
-        self.color = color
         
     def add_sensor(self, sensor):
         self.sensors.append(sensor)
@@ -32,9 +30,6 @@ class IRobot:
     
     def get_dimensions(self):
         return self.dimensions
-
-    def get_color(self):
-        return self.color
 
     def move(self):
         pass
