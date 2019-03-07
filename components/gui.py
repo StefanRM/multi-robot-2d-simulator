@@ -73,12 +73,12 @@ class Gui:
 
         robots = world.get_robots()
         robots_colors = world.get_robots_colors()
+        robots_dimensions = world.get_robots_dimensions()
 
         for it, robot in enumerate(robots):
             trace = robot.get_trace()
-            x = robot.get_coordinate_x()
-            y = robot.get_coordinate_y()
-            dimension = robot.get_dimensions()
+            (x, y) = robot.get_pose().get_position()
+            dimension = robots_dimensions[it]
             width = dimension["width"]
             height = dimension["height"]
 
@@ -91,15 +91,14 @@ class Gui:
                     stop = (c + width / 2, d + height / 2)
                     pygame.draw.line(self.window, robots_colors[it], start, stop, TRACE_LINE_WIDTH)
             
-        for robot in robots:
-            x = robot.get_coordinate_x()
-            y = robot.get_coordinate_y()
-            dimension = robot.get_dimensions()
+        for it, robot in enumerate(robots):
+            (x, y) = robot.get_pose().get_position()
+            dimension = robots_dimensions[it]
             width = dimension["width"]
             height = dimension["height"]
 
             # pygame.draw.rect(self.window, robot.get_color(), (x, y, width, height))
-            theta = robot.get_coordinate_theta()
+            theta = robot.get_pose().get_heading()
             surf = pygame.transform.scale(self.robot_img, (width, height))
             surf = pygame.transform.rotate(surf, -theta)
             self.window.blit(surf, (x, y))

@@ -7,11 +7,15 @@ class World():
         self.robots = []
         self.obstacles = []
 
+        # robots' dimensions
+        self.robots_dimensions = []
+
         # robots' colors (representation)
         self.robots_colors = []
 
-    def add_robot(self, robot, color = (0, 0, 255)):
+    def add_robot(self, robot, dimensions = {"width" : 40, "height" : 60}, color = (0, 0, 255)):
         self.robots.append(robot)
+        self.robots_dimensions.append(dimensions)
         self.robots_colors.append(color)
     
     def add_obstacle(self, obstacle):
@@ -25,6 +29,9 @@ class World():
     
     def get_obstacles(self):
         return self.obstacles
+
+    def get_robots_dimensions(self):
+        return self.robots_dimensions
 
     def get_robots_colors(self):
         return self.robots_colors
