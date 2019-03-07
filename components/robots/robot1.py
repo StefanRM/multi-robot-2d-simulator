@@ -31,4 +31,4 @@ class Robot1(irobot.IRobot):
 
         self.set_pose(x, y, theta)
 
-        self.trace.append(self.pose.get_position())
+        self.add_current_position_to_trace()

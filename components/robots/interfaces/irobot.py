@@ -23,6 +23,9 @@ class IRobot:
     
     def set_pose(self, x, y, theta):
         self.pose.set_pose(x, y, theta)
+    
+    def add_current_position_to_trace(self):
+        self.trace.append(self.pose.get_position())
 
     def move(self):
         pass
