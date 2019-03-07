@@ -16,15 +16,18 @@ class Robot1(irobot.IRobot):
 
     def __init__(self, coordinate_x = 0.0, coordinate_y = 0.0, coordinate_theta = 0.0):
         super().__init__(coordinate_x, coordinate_y, coordinate_theta)
+        self.my_theta = 0.0
 
     def move(self):
-        (x, y) = self.pose.get_position()
+        (old_x, old_y) = self.pose.get_position()
         theta = self.pose.get_heading()
-        theta_rad = math.radians(theta)
 
-        x = 200 + 100 * math.cos(theta_rad)
-        y = 200 + 100 * math.sin(theta_rad)
-        theta += 1
+        my_theta_rad = math.radians(self.my_theta)
+        x = 200 + 100 * math.cos(my_theta_rad)
+        y = 200 + 100 * math.sin(my_theta_rad)
+        theta = math.degrees(math.atan2(y - old_y, x - old_x))
+
+        self.my_theta += 1
 
         self.set_pose(x, y, theta)
 

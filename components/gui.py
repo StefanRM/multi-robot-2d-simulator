@@ -29,8 +29,17 @@ class Gui:
         self.window = pygame.display.set_mode((width, height))
         pygame.display.set_caption(caption)
 
+        # origin of the axis for a 4 quadrant map
+        self.origin_x = 500
+        self.origin_y = 500
+
         # robot symbol
         self.robot_img = pygame.image.load("resources/robot_model_04.png")
+    
+    # convert coordinates the window system of coordinates
+    def convert_coordinates(self, position):
+        (x, y) = position
+        return (self.origin_x + x, self.origin_y - y)
 
     def toggle_display_traces(self):
         self.display_traces = not self.display_traces
@@ -87,8 +96,8 @@ class Gui:
                 for i in range(len(trace) - 1):
                     (a, b) = trace[i]
                     (c, d) = trace[i + 1]
-                    start = (a + width / 2, b + height / 2)
-                    stop = (c + width / 2, d + height / 2)
+                    start = self.convert_coordinates((a + width / 2, b + height / 2))
+                    stop = self.convert_coordinates((c + width / 2, d + height / 2))
                     pygame.draw.line(self.window, robots_colors[it], start, stop, TRACE_LINE_WIDTH)
             
         for it, robot in enumerate(robots):
@@ -100,8 +109,8 @@ class Gui:
             # pygame.draw.rect(self.window, robot.get_color(), (x, y, width, height))
             theta = robot.get_pose().get_heading()
             surf = pygame.transform.scale(self.robot_img, (width, height))
-            surf = pygame.transform.rotate(surf, -theta)
-            self.window.blit(surf, (x, y))
+            surf = pygame.transform.rotate(surf, theta)
+            self.window.blit(surf, self.convert_coordinates((x, y + height))) # the image has bottom left corner as origin now
 
         pygame.display.update()
 

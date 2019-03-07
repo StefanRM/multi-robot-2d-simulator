@@ -17,12 +17,6 @@ class IRobot:
     
     def get_pose(self):
         return self.pose
-
-    def get_position(self):
-        return (self.coordinate_x, self.coordinate_y)
-
-    def get_heading(self):
-        return self.coordinate_theta
     
     def get_trace(self):
         return self.trace
