@@ -1,4 +1,5 @@
 import pygame
+import math
 
 DISP_TRACES_KEY = pygame.K_t
 DISP_GRID_KEY = pygame.K_g
@@ -109,7 +110,7 @@ class Gui:
             # pygame.draw.rect(self.window, robot.get_color(), (x, y, width, height))
             theta = robot.get_pose().get_heading()
             surf = pygame.transform.scale(self.robot_img, (width, height))
-            surf = pygame.transform.rotate(surf, theta)
+            surf = pygame.transform.rotate(surf, math.degrees(theta))
             self.window.blit(surf, self.convert_coordinates((x, y + height))) # the image has bottom left corner as origin now
 
         pygame.display.update()
