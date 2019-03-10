@@ -25,7 +25,7 @@ class Robot1(irobot.IRobot):
         my_theta_rad = math.radians(self.my_theta)
         x = 200 + 100 * math.cos(my_theta_rad)
         y = 200 + 100 * math.sin(my_theta_rad)
-        theta = math.degrees(math.atan2(y - old_y, x - old_x))
+        theta = math.atan2(y - old_y, x - old_x)
 
         self.my_theta += 1
 
