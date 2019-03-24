@@ -46,11 +46,23 @@ class DifferentialDrive:
         encoders[0].update(revolutions_l)
         encoders[1].update(revolutions_r)
 
-    # TODO; return a the list [vl, vr] -> instead i use a tuple for ease: (wl, wr) = get_revs()
+    # TODO; return a the list [vl, vr] -> instead using a tuple for ease: (wl, wr) = get_revs()
     def get_revolutions(self):
-        return (wl, wr)
+        return (self.wl, self.wr)
 
     # TODO; Set the drive angular rates
     def set_rates(self, wl, wr):
         self.wl = wl
         self.wr = wr
+
+    def unicycle_to_differential(self, v, w):
+        wr_computed = ((2 * v + w * self.wheel_base) / (2 * self.wheel_radius)) / self.wheel_radius
+        wl_computed = ((2 * v - w * self.wheel_base) / (2 * self.wheel_radius)) / self.wheel_radius
+        return (wl_computed, wr_computed)
+    
+    def differential_to_unicycle(self):
+        vl = self.wl * self.wheel_radius
+        vr = self.wr * self.wheel_radius
+        v = (self.wheel_radius / 2) * (vr + vl)
+        w = (self.wheel_radius / 2) * (vr - vl)
+        return (v, w)

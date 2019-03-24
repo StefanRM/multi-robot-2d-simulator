@@ -45,7 +45,19 @@ class World():
              b) control
                 -> each robot move
         '''
-        for robot in self.robots:
-            robot.move()
+
+        self.update()
+        self.control()
         
         self.time += self.unit_time
+
+    def update(self):
+        for robot in self.robots:
+            robot.update_pose(self.unit_time)
+
+        # sensors update
+
+    def control(self):
+        for robot in self.robots:
+            robot.move()
+

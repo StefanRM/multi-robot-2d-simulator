@@ -5,15 +5,27 @@ class IRobot:
         # pose
         self.pose = Pose(x = coordinate_x, y = coordinate_y, theta = coordinate_theta)
 
+        self.encoders = []
         self.sensors = []
-        self.controllers = []
+        self.model = None
+        self.controller = None
         self.trace = [(coordinate_x, coordinate_y), (coordinate_x, coordinate_y)]
+
+        # control inputs
+        self.v = 0.0
+        self.w = 0.0
         
     def add_sensor(self, sensor):
         self.sensors.append(sensor)
     
-    def add_controller(self, sensor):
-        self.controllers.append(controller)
+    def set_controller(self, sensor):
+        self.controller = controller
+    
+    def add_encoder(self, encoder):
+        self.encoders.append(encoder)
+    
+    def set_model(self, model):
+        self.model = model
     
     def get_pose(self):
         return self.pose
@@ -28,4 +40,7 @@ class IRobot:
         self.trace.append(self.pose.get_position())
 
     def move(self):
+        pass
+
+    def update_pose(self):
         pass
