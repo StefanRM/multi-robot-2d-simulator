@@ -24,15 +24,15 @@ class Gui:
         self.display_traces = False
         self.display_grid = False
         self.press_limiter_toggle_display_traces = False
-        self.press_limiter_toggle_display_gird = False
+        self.press_limiter_toggle_display_grid = False
 
         pygame.init()
         self.window = pygame.display.set_mode((width, height))
         pygame.display.set_caption(caption)
 
         # origin of the axis for a 4 quadrant map
-        self.origin_x = 500
-        self.origin_y = 500
+        self.origin_x = 0
+        self.origin_y = height
 
         # robot symbol
         self.robot_img = pygame.image.load("resources/robot_model_04.png")
@@ -65,11 +65,11 @@ class Gui:
             self.press_limiter_toggle_display_traces = False
         
         if keys[DISP_GRID_KEY]:
-            if not self.press_limiter_toggle_display_gird:
+            if not self.press_limiter_toggle_display_grid:
                 self.toggle_display_grid()
-                self.press_limiter_toggle_display_gird = True
+                self.press_limiter_toggle_display_grid = True
         else:
-            self.press_limiter_toggle_display_gird = False
+            self.press_limiter_toggle_display_grid = False
             
 
         # drawing the grid

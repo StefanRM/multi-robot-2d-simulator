@@ -37,6 +37,14 @@ class World():
         return self.robots_colors
 
     def step(self):
+        '''
+            Every iteratioon:
+             a) update
+                -> v, tick, compute pose
+                -> compute distance for each robot (for each of its own sensor)
+             b) control
+                -> each robot move
+        '''
         for robot in self.robots:
             robot.move()
         
