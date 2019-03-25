@@ -1,6 +1,7 @@
 import pygame
 import math
-
+# TODO: Document this
+#       --> are these default vaules?
 DISP_TRACES_KEY = pygame.K_t
 DISP_GRID_KEY = pygame.K_g
 
@@ -9,7 +10,7 @@ DIST_BETWEEN_GRIDS = 1
 TRACE_LINE_WIDTH = 2
 
 class Gui:
-
+    # TODO: what are all these hardcoded values? Define constants and document each one.
     def __init__(self, period = 100, width = 500, height = 500, caption = "Multi-Robot 2D Simulator", background_color = (0, 0, 0), grid_color = -1):
         self.period = period # miliseconds
         self.width = width
