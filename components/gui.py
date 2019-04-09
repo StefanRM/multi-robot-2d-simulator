@@ -39,7 +39,7 @@ class Gui:
         self.origin_y = height
 
         # robot symbol
-        self.robot_img = pygame.image.load("resources/robot_model_04.png")
+        self.robot_img = pygame.image.load(CONFIG['path_to_robot_image'])
     
     # convert coordinates the window system of coordinates
     def convert_coordinates(self, position):

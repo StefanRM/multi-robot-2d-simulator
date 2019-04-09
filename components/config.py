@@ -39,4 +39,6 @@ CONFIG = {
 
     'win_width': 1080,
     'win_height': 720,
+
+    'path_to_robot_image': "resources/robot_model_04.png",
 }
