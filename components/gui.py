@@ -1,25 +1,29 @@
 import pygame
 import math
+from components.config import CONFIG
 
-DISP_TRACES_KEY = pygame.K_t
-DISP_GRID_KEY = pygame.K_g
-
-GRID_CELL_DIM = 20
-DIST_BETWEEN_GRIDS = 1
-TRACE_LINE_WIDTH = 2
 
 class Gui:
 
-    def __init__(self, period = 100, width = 500, height = 500, caption = "Multi-Robot 2D Simulator", background_color = (0, 0, 0), grid_color = -1):
+    def __init__(self,
+                 robots_trace_col,
+                 robots_dim=CONFIG['robots_dim'],
+                 period=CONFIG['GUI_PERIOD_TIME'],
+                 width=CONFIG['win_width'],
+                 height=CONFIG['win_height'],
+                 caption=CONFIG['win_caption'],
+                 background_color=CONFIG['colors']['white'],
+                 grid_color=CONFIG['colors']['light-gray']):
         self.period = period # miliseconds
         self.width = width
         self.height = height
         self.caption = caption
         self.background_color = background_color
-        if grid_color == -1:
-            self.grid_color = (255 - background_color[0], 255 - background_color[1], 255 - background_color[2])
-        else:
-            self.grid_color = grid_color
+        
+        self.grid_color = grid_color
+        
+        self.robots_dim = robots_dim
+        self.robots_trace_col = robots_trace_col
 
         self.display_traces = False
         self.display_grid = False
@@ -57,14 +61,14 @@ class Gui:
 
         keys = pygame.key.get_pressed()
 
-        if keys[DISP_TRACES_KEY]:
+        if keys[CONFIG['DISP_TRACES_KEY']]:
             if not self.press_limiter_toggle_display_traces:
                 self.toggle_display_traces()
                 self.press_limiter_toggle_display_traces = True
         else:
             self.press_limiter_toggle_display_traces = False
         
-        if keys[DISP_GRID_KEY]:
+        if keys[CONFIG['DISP_GRID_KEY']]:
             if not self.press_limiter_toggle_display_grid:
                 self.toggle_display_grid()
                 self.press_limiter_toggle_display_grid = True
@@ -75,20 +79,19 @@ class Gui:
         # drawing the grid
         if self.display_grid:
             self.window.fill(self.grid_color)
-            for i in range(0, self.width, DIST_BETWEEN_GRIDS + GRID_CELL_DIM):
-                for j in range(0, self.width, DIST_BETWEEN_GRIDS + GRID_CELL_DIM):
-                    pygame.draw.rect(self.window, self.background_color, (i, j, GRID_CELL_DIM, GRID_CELL_DIM))
+            for i in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
+                for j in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
+                    pygame.draw.rect(self.window, self.background_color, (i, j, CONFIG['GRID_CELL_DIM'], CONFIG['GRID_CELL_DIM']))
         else:
             self.window.fill(self.background_color)
 
         robots = world.get_robots()
-        robots_colors = world.get_robots_colors()
-        robots_dimensions = world.get_robots_dimensions()
+
 
         for it, robot in enumerate(robots):
-            trace = robot.get_trace()
+            trace = world.get_robot_trace(it)
             (x, y) = robot.get_pose().get_position()
-            dimension = robots_dimensions[it]
+            dimension = self.robots_dim
             width = dimension["width"]
             height = dimension["height"]
 
@@ -99,11 +102,11 @@ class Gui:
                     (c, d) = trace[i + 1]
                     start = self.convert_coordinates((a + width / 2, b + height / 2))
                     stop = self.convert_coordinates((c + width / 2, d + height / 2))
-                    pygame.draw.line(self.window, robots_colors[it], start, stop, TRACE_LINE_WIDTH)
+                    pygame.draw.line(self.window, self.robots_trace_col[it], start, stop, CONFIG['TRACE_LINE_WIDTH'])
             
         for it, robot in enumerate(robots):
             (x, y) = robot.get_pose().get_position()
-            dimension = robots_dimensions[it]
+            dimension = self.robots_dim
             width = dimension["width"]
             height = dimension["height"]
 
