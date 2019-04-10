@@ -100,8 +100,8 @@ class Gui:
                 for i in range(len(trace) - 1):
                     (a, b) = trace[i]
                     (c, d) = trace[i + 1]
-                    start = self.convert_coordinates((a + width / 2, b + height / 2))
-                    stop = self.convert_coordinates((c + width / 2, d + height / 2))
+                    start = self.convert_coordinates((a, b))
+                    stop = self.convert_coordinates((c, d))
                     pygame.draw.line(self.window, self.robots_trace_col[it], start, stop, CONFIG['TRACE_LINE_WIDTH'])
             
         for it, robot in enumerate(robots):
@@ -114,7 +114,7 @@ class Gui:
             theta = robot.get_pose().get_heading()
             surf = pygame.transform.scale(self.robot_img, (width, height))
             surf = pygame.transform.rotate(surf, math.degrees(theta))
-            self.window.blit(surf, self.convert_coordinates((x, y + height))) # the image has bottom left corner as origin now
+            self.window.blit(surf, self.convert_coordinates((x - width / 2, y + height / 2))) # the image has bottom left corner as origin now
 
         pygame.display.update()
 
