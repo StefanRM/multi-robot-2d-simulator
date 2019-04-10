@@ -28,9 +28,19 @@ class DifferentialDriveRobot(Robot):
         # TODO: the total speed can not greater than the maximum possible speed --> limit it
         v = min(v, max_speed)
 
+
+        # TODO: Deduce limitation
+        # max_angular_speed = math.fabs(0.5 * omega * self.robot_base / self.wheel_radius)
+        # max_total_speed = math.fabs(v / self.wheel_radius) + max_angular_speed
+
+        # if max_total_speed > self.max_speed:
+        #     if max_angular_speed > self.max_speed:
+        #         omega = self.wheel_radius * (self.max_speed / omega) * self.max_speed * self.robot_base
+        #     v = sign(v) * (self.max_speed - math.fabs(0.5 * omega * self.robot_base) / self.wheel_radius)
+
         # TODO: Compute the left/right wheel angular speeds: (v, omega) --> (wl, wr)
-        wl = (2 * v - omega * l) / (2 * r * r)
-        wr = (2 * v + omega * l) / (2 * r * r)
+        wl = (2 * v - omega * l) / (2 * r)
+        wr = (2 * v + omega * l) / (2 * r)
 
         self.kinematics.set_drive_speeds(wl, wr)
 

@@ -59,12 +59,6 @@ class World():
                 -> each robot move
         '''
 
-        self.update()
-        self.control()
-        
-        self.time += self.unit_time
-
-    def update(self):
         for it, robot in enumerate(self.robots):
             robot.update(self.unit_time)
             (x, y) = robot.get_pose().get_position()
@@ -72,7 +66,11 @@ class World():
 
         # sensors update
 
-    def control(self):
         for robot in self.robots:
             robot.move(3, 0.1)
+
+        self.control()
+        
+        self.time += self.unit_time
+
 
