@@ -29,8 +29,8 @@ class DifferentialDriveRobot(Robot):
         v = min(v, max_speed)
 
         # TODO: Compute the left/right wheel angular speeds: (v, omega) --> (wl, wr)
-        wl = (2 * v - omega * l) / (2 * r * r)
-        wr = (2 * v + omega * l) / (2 * r * r)
+        wl = (2 * v - omega * l) / (2 * r)
+        wr = (2 * v + omega * l) / (2 * r)
 
         self.kinematics.set_drive_speeds(wl, wr)
 

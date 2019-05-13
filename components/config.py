@@ -30,6 +30,7 @@ CONFIG = {
 
     'DISP_TRACES_KEY': pygame.K_t,
     'DISP_GRID_KEY': pygame.K_g,
+    'DISP_SENSORS_KEY': pygame.K_s,
 
     'GRID_CELL_DIM': 20,
     'DIST_BETWEEN_GRIDS': 1,

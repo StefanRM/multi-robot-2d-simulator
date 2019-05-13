@@ -74,5 +74,5 @@ class World():
 
     def control(self):
         for robot in self.robots:
-            robot.move(3, 0.1)
+            robot.move(40, 1)
 
