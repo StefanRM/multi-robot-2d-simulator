@@ -3,6 +3,7 @@ from components.robots.interfaces.robot import Robot
 from components.robots.models.differential_drive import DifferentialDrive
 from components.robots.models.pose import Pose
 from components import utilities
+from components.config import CONFIG
 
 # TODO: The robot has:
 #   1. a state --> Pose
@@ -25,8 +26,8 @@ class DifferentialDriveRobot(Robot):
         l = self.geometry.robot_base
         max_speed = self.geometry.max_speed
 
-        # TODO: the total speed can not greater than the maximum possible speed --> limit it
-        v = min(v, max_speed)
+        # TODO: the total speed cannot be greater than the maximum possible speed --> limit it
+        v = max(min(v, max_speed), -max_speed)
 
         # TODO: Compute the left/right wheel angular speeds: (v, omega) --> (wl, wr)
         wl = (2 * v - omega * l) / (2 * r)
@@ -70,6 +71,16 @@ class DifferentialDriveRobot(Robot):
 
         # update pose
         self.pose.set_pose(x_new, y_new, theta_new)
+
+        # update proximity sensors
+        # should be modified!
+        dimension = CONFIG['robots_dim']
+        width = dimension["width"]
+        height = dimension["height"]
+        radius = int(math.sqrt(width * width + height * height) / 2.0)
+        for s in self.sensors["proximity"]:
+            theta_s = theta_new + s.initial_pos
+            s.get_pose().set_pose(radius * math.cos(theta_s), radius * math.sin(theta_s), theta_s)
 
     # TODO: This should update the differential drive part of the robot: angles, encoders, pose --> in this order
     def update(self, world_unit_time):

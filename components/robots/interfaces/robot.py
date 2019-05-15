@@ -16,3 +16,6 @@ class Robot:
 
     def update(self, unit_time):
         pass
+    
+    def get_sensors(self):
+        return self.sensors["proximity"]
