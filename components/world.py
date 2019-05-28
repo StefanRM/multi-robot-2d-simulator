@@ -1,4 +1,7 @@
 from components.config import CONFIG
+import math
+import sys
+from components import utilities
 
 class World():
 
@@ -59,10 +62,15 @@ class World():
                 -> each robot move
         '''
 
-        self.update()
+        if self.update():
+            print("Collision occured!")
+            return True
+
         self.control()
         
         self.time += self.unit_time
+
+        return False
 
     def update(self):
         for it, robot in enumerate(self.robots):
@@ -71,8 +79,60 @@ class World():
             self.robots_traces[it].append((x, y))
 
         # sensors update
+        dimension = CONFIG['robots_dim']
+        width = dimension["width"]
+        height = dimension["height"]
+
+        radius = int(math.sqrt(width * width + height * height) / 2.0)
+
+        for robot in self.robots:
+            (x, y) = robot.get_pose().get_position()
+            sensors = robot.get_sensors()
+            neigh_detected = []
+
+            for other_robot in self.robots:
+
+                min_d = sensors[0].get_max()
+                found = False
+                sens_id = -1
+                
+                if robot != other_robot:
+                    if utilities.check_robot_collision((x, y), other_robot.get_pose().get_position(), radius):
+                        return True
+                        # pass
+                    for sens in sensors:
+                        (x_sens, y_sens) = sens.pose.get_position()
+                        (x_sc, y_sc) = ((x + x_sens), (y + y_sens))
+                        
+                        points_to_check = [(sens.left_point.get_position()), (sens.max_point.get_position()), (sens.right_point.get_position())]
+                        for point in points_to_check:
+                            res = utilities.find_intersection((x_sc, y_sc), point, other_robot.get_pose().get_position(), radius)
+                            for sol in res:
+                                (x_sol, y_sol) = sol
+
+                                if (utilities.check_point_inside((x_sc, y_sc), point, sol)):
+                                    d = math.sqrt((x_sc - x_sol) * (x_sc - x_sol) + (y_sc - y_sol) * (y_sc - y_sol))
+                                    # print(d)
+                                    if d <= min_d:
+                                        min_d = d
+                                        found = True
+                                        sens_id = sens.get_id()
+                        
+                if found:
+                    # print("r_id({})-other_r_id({})-sens_id({}): {}".format(robot.id, other_robot.id, sens_id, min_d))
+                    neigh_detected.append((other_robot.id, sens_id, min_d))
+                    # t=sys.stdin.readline()
+            # print("{}: {}".format(robot.id, neigh_detected))
+            robot.neigh_list = neigh_detected
+        
+        return False
 
     def control(self):
+        i = 0
         for robot in self.robots:
-            robot.move(40, 1)
-
+            if i == 100:
+                robot.move(40, 0.75)
+            else:
+                robot.move(40, 1)
+            
+            i += 1

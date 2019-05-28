@@ -42,4 +42,6 @@ CONFIG = {
     'win_height': 720,
 
     'path_to_robot_image': "resources/robot_model_04.png",
+
+    'sensor_max_range': 30,
 }

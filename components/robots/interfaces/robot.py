@@ -1,6 +1,7 @@
 from components.robots.models.pose import Pose
 
 class Robot:
+    next_id = 0
 
     def __init__(self, geometry, kinematics, sensors):
         self.geometry = geometry

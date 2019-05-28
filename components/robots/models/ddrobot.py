@@ -19,6 +19,20 @@ class DifferentialDriveRobot(Robot):
     def __init__(self, geometry, sensors, x=0.0, y=0.0, theta=0.0):
         super(DifferentialDriveRobot, self).__init__(geometry, DifferentialDrive(), sensors)
         self.pose = Pose(x, y, theta)
+        self.id = Robot.next_id
+        Robot.next_id += 1
+
+        # should be modified!
+        dimension = CONFIG['robots_dim']
+        width = dimension["width"]
+        height = dimension["height"]
+        radius = int(math.sqrt(width * width + height * height) / 2.0)
+        for it, s in enumerate(self.sensors["proximity"]):
+            s.set_id(it)
+            s.compute_sensors_points((x, y), radius)
+        
+        self.neigh_list = []
+
 
 # TODO: Implement the unicycle to differential drive transform
     def move(self, v, omega):
@@ -79,11 +93,14 @@ class DifferentialDriveRobot(Robot):
         height = dimension["height"]
         radius = int(math.sqrt(width * width + height * height) / 2.0)
         for s in self.sensors["proximity"]:
-            theta_s = theta_new + s.initial_pos
+            theta_s = utilities.normalize_angle(theta_new + s.initial_pos)
             s.get_pose().set_pose(radius * math.cos(theta_s), radius * math.sin(theta_s), theta_s)
+            s.compute_sensors_points((x, y), radius)
 
     # TODO: This should update the differential drive part of the robot: angles, encoders, pose --> in this order
     def update(self, world_unit_time):
+        # print("{} -> {}".format(self.id, self.neigh_list))
+
         # update diff drive angles
         self.kinematics.update(world_unit_time)
 

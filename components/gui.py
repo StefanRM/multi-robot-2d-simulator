@@ -33,7 +33,7 @@ class Gui:
         self.press_limiter_toggle_display_sensors = False
 
         pygame.init()
-        self.window = pygame.display.set_mode((width, height))
+        self.window = pygame.display.set_mode((width, height), pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
         pygame.display.set_caption(caption)
 
         # origin of the axis for a 4 quadrant map
@@ -63,6 +63,9 @@ class Gui:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
+            elif event.type == pygame.VIDEORESIZE:
+                self.window=pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
+
 
         keys = pygame.key.get_pressed()
 
@@ -128,50 +131,19 @@ class Gui:
                 for sens in sensors:
                     (x_sens, y_sens) = sens.pose.get_position()
 
-                    # should be modified!
-                    radius = int(math.sqrt(width * width + height * height) / 2.0)
-                    center = (int(x), int(y))
                     sensor_center = (int(x + x_sens), int(y + y_sens))
-                    pygame.draw.circle(self.window, CONFIG['colors']['black'], self.convert_coordinates(center), radius, 1)
+
                     pygame.draw.circle(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), 3, 3)
-
-                    # sensors beams
-                    (x_c, y_c) = (center[0], center[1])
-                    (x_s, y_s) = (sensor_center[0], sensor_center[1])
-                    d = sens.max
-                    # pygame.draw.circle(self.window, CONFIG['colors']['green'], self.convert_coordinates(center), radius + d, 1)
-                    if x_s - x_c == 0:
-                        x_d = x_s
-                        if y_c < y_s:
-                            y_d = y_s + d
-                        else:
-                            y_d = y_s - d
-                    else:
-                        m = abs((y_s - y_c) / (x_s - x_c))
-                        if x_c < x_s:
-                            x_d = x_s + d / math.sqrt(m * m + 1)
-                        else:
-                            x_d = x_s - d / math.sqrt(m * m + 1)
-
-                        if y_c < y_s:
-                            y_d = y_s + d * m / math.sqrt(m * m + 1)
-                        else:
-                            y_d = y_s - d * m / math.sqrt(m * m + 1)
-                    # pygame.draw.line(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), self.convert_coordinates((x_d, y_d)), 1)
-
-                    ang = sens.aperture
-                    (x_d1, y_d1) = (x_d - x_s, y_d - y_s)
-                    (x_d1, y_d1) = (x_d1 * math.cos(ang / 2.0) - y_d1 * math.sin(ang / 2.0), x_d1 * math.sin(ang / 2.0) + y_d1 * math.cos(ang / 2.0))
-                    (x_d1, y_d1) = (x_d1 + x_s, y_d1 + y_s)
-
-                    (x_d2, y_d2) = (x_d - x_s, y_d - y_s)
-                    (x_d2, y_d2) = (x_d2 * math.cos(- ang / 2.0) - y_d2 * math.sin(- ang / 2.0), x_d2 * math.sin(- ang / 2.0) + y_d2 * math.cos(- ang / 2.0))
-                    (x_d2, y_d2) = (x_d2 + x_s, y_d2 + y_s)
-                    # pygame.draw.line(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), self.convert_coordinates((x_d1, y_d1)), 1)
-                    # pygame.draw.line(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), self.convert_coordinates((x_d2, y_d2)), 1)
-
-                    pygame.draw.polygon(self.window, CONFIG['colors']['red'], [self.convert_coordinates(sensor_center), self.convert_coordinates((x_d1, y_d1)), self.convert_coordinates((x_d, y_d)), self.convert_coordinates((x_d2, y_d2))], 1)
+                    pygame.draw.polygon(self.window, CONFIG['colors']['red'], [self.convert_coordinates(sensor_center),
+                                                                               self.convert_coordinates(sens.left_point.get_position()),
+                                                                               self.convert_coordinates(sens.max_point.get_position()),
+                                                                               self.convert_coordinates(sens.right_point.get_position())], 1)
             
+            # should be modified!
+            radius = int(math.sqrt(width * width + height * height) / 2.0)
+            center = (int(x), int(y))
+            pygame.draw.circle(self.window, CONFIG['colors']['black'], self.convert_coordinates(center), radius, 1)
+
             surf = pygame.transform.scale(self.robot_img, (width, height))
             surf = self.rot_center(surf, math.degrees(theta))
             self.window.blit(surf, self.convert_coordinates((x - width / 2, y + height / 2))) # the image has bottom left corner as origin now
