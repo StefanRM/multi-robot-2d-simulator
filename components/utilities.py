@@ -73,3 +73,16 @@ def check_robot_collision(r1_center, r2_center, radius):
     dy = y1 - y2
 
     return math.sqrt(dx * dx + dy * dy) < 2 * radius
+
+'''
+    (x1, y1), (x2, y2), (x3, y3) are collinear if
+    |x1 y1 1|
+    |x2 y2 1| = 0
+    |x3 y3 1|
+'''
+def check_collinearity(point1, point2, point3):
+    (x1, y1) = point1
+    (x2, y2) = point2
+    (x3, y3) = point3
+
+    return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) <= 0.0000001

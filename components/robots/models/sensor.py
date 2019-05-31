@@ -1,5 +1,6 @@
 from components.robots.models.pose import Pose
 import math
+from components.config import CONFIG
 
 class Sensor:
     '''
@@ -8,11 +9,11 @@ class Sensor:
         pose - relative position (Pose) to the center of the robot where the sensor is situated
         aperture - the aperture of the sensor beam
 
-            / left_point
+            / left_points
            /
     sensor ---- max_point
            \
-            \ right_point
+            \ right_points
     '''
     def __init__(self, max, pose, aperture, initial_pos):
         # self.min = min # to be used in the future
@@ -24,9 +25,12 @@ class Sensor:
         self.id = 0
 
         # points determined for the sensor proximity beam
+        self.beam_left_points = []
+        self.beam_right_points = []
+        for i in range(CONFIG['sensor_beam_part_points']):
+            self.beam_left_points.append(Pose())
+            self.beam_right_points.append(Pose())
         self.max_point = Pose()
-        self.left_point = Pose()
-        self.right_point = Pose()
 
     def set_id(self, id):
         self.id = id
@@ -79,13 +83,15 @@ class Sensor:
         
         self.max_point.set_position(x_d, y_d)
 
-        ang = self.aperture
-        (x_d1, y_d1) = (x_d - x_s, y_d - y_s)
-        (x_d1, y_d1) = (x_d1 * math.cos(ang / 2.0) - y_d1 * math.sin(ang / 2.0), x_d1 * math.sin(ang / 2.0) + y_d1 * math.cos(ang / 2.0))
-        (x_d1, y_d1) = (x_d1 + x_s, y_d1 + y_s)
-        self.left_point.set_position(x_d1, y_d1)
+        ang = self.aperture / 2.0
+        nr_points = CONFIG['sensor_beam_part_points']
+        for i in range(nr_points):
+            (x_d1, y_d1) = (x_d - x_s, y_d - y_s)
+            (x_d1, y_d1) = (x_d1 * math.cos((nr_points - i) * ang / nr_points) - y_d1 * math.sin((nr_points - i) * ang / nr_points), x_d1 * math.sin((nr_points - i) * ang / nr_points) + y_d1 * math.cos((nr_points - i) * ang / nr_points))
+            (x_d1, y_d1) = (x_d1 + x_s, y_d1 + y_s)
+            self.beam_left_points[i].set_position(x_d1, y_d1)
 
-        (x_d2, y_d2) = (x_d - x_s, y_d - y_s)
-        (x_d2, y_d2) = (x_d2 * math.cos(- ang / 2.0) - y_d2 * math.sin(- ang / 2.0), x_d2 * math.sin(- ang / 2.0) + y_d2 * math.cos(- ang / 2.0))
-        (x_d2, y_d2) = (x_d2 + x_s, y_d2 + y_s)
-        self.right_point.set_position(x_d2, y_d2)
+            (x_d2, y_d2) = (x_d - x_s, y_d - y_s)
+            (x_d2, y_d2) = (x_d2 * math.cos(- (i + 1) * ang / nr_points) - y_d2 * math.sin(- (i + 1) * ang / nr_points), x_d2 * math.sin(- (i + 1) * ang / nr_points) + y_d2 * math.cos(- (i + 1) * ang / nr_points))
+            (x_d2, y_d2) = (x_d2 + x_s, y_d2 + y_s)
+            self.beam_right_points[i].set_position(x_d2, y_d2)

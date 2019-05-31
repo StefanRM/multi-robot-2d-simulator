@@ -134,10 +134,15 @@ class Gui:
                     sensor_center = (int(x + x_sens), int(y + y_sens))
 
                     pygame.draw.circle(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), 3, 3)
-                    pygame.draw.polygon(self.window, CONFIG['colors']['red'], [self.convert_coordinates(sensor_center),
-                                                                               self.convert_coordinates(sens.left_point.get_position()),
-                                                                               self.convert_coordinates(sens.max_point.get_position()),
-                                                                               self.convert_coordinates(sens.right_point.get_position())], 1)
+
+                    sensor_points = [self.convert_coordinates(sensor_center)]
+                    for point in sens.beam_left_points:
+                        sensor_points.append(self.convert_coordinates(point.get_position()))
+                    sensor_points.append(self.convert_coordinates(sens.max_point.get_position()))
+                    for point in sens.beam_right_points:
+                        sensor_points.append(self.convert_coordinates(point.get_position()))
+
+                    pygame.draw.polygon(self.window, CONFIG['colors']['red'], sensor_points, 1)
             
             # should be modified!
             radius = int(math.sqrt(width * width + height * height) / 2.0)

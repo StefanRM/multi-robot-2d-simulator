@@ -43,5 +43,6 @@ CONFIG = {
 
     'path_to_robot_image': "resources/robot_model_04.png",
 
-    'sensor_max_range': 30,
+    'sensor_max_range': 200,
+    'sensor_beam_part_points': 3,
 }

@@ -104,7 +104,13 @@ class World():
                         (x_sens, y_sens) = sens.pose.get_position()
                         (x_sc, y_sc) = ((x + x_sens), (y + y_sens))
                         
-                        points_to_check = [(sens.left_point.get_position()), (sens.max_point.get_position()), (sens.right_point.get_position())]
+                        points_to_check = []
+                        for point in sens.beam_left_points:
+                            points_to_check.append(point.get_position())
+                        points_to_check.append(sens.max_point.get_position())
+                        for point in sens.beam_right_points:
+                            points_to_check.append(point.get_position())
+
                         for point in points_to_check:
                             res = utilities.find_intersection((x_sc, y_sc), point, other_robot.get_pose().get_position(), radius)
                             for sol in res:
@@ -113,7 +119,24 @@ class World():
                                 if (utilities.check_point_inside((x_sc, y_sc), point, sol)):
                                     d = math.sqrt((x_sc - x_sol) * (x_sc - x_sol) + (y_sc - y_sol) * (y_sc - y_sol))
                                     # print(d)
-                                    if d <= min_d:
+
+                                    blocked = False
+                                    new_neigh_detected = []
+
+                                    for neigh in neigh_detected:
+                                        (ot_rid, s_id, m_d) = neigh
+                                        if (s_id == sens.get_id()) and utilities.check_collinearity(robot.get_pose().get_position(),
+                                                                                                    self.robots[ot_rid].get_pose().get_position(),
+                                                                                                    other_robot.get_pose().get_position()):
+                                            if m_d < d:
+                                                blocked = True
+                                            else:
+                                                continue
+                                        new_neigh_detected.append(neigh)
+
+                                    neigh_detected = new_neigh_detected
+
+                                    if (not blocked) and (d <= min_d):
                                         min_d = d
                                         found = True
                                         sens_id = sens.get_id()
@@ -128,11 +151,31 @@ class World():
         return False
 
     def control(self):
-        i = 0
-        for robot in self.robots:
-            if i == 100:
-                robot.move(40, 0.75)
-            else:
-                robot.move(40, 1)
+        # i = 0
+        # for robot in self.robots:
+        #     if i == 3:
+        #         robot.move(40, 0.75)
+        #     else:
+        #         robot.move(40, 1)
             
-            i += 1
+        #     i += 1
+        dc = 20
+        for robot in self.robots:
+            ui = 0
+            wi = 0
+            for neigh in robot.neigh_list:
+                (ot_rid, sens_id, d) = neigh
+                (xi, yi) = robot.get_pose().get_position()
+                thetai = robot.get_pose().get_heading()
+                (xj, yj) = self.robots[ot_rid].get_pose().get_position()
+
+                kd = 1 - math.exp(dc - d * d)
+                gy = ((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
+
+                ui -= gy
+
+                phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
+                # phiij = math.atan2(yj - yi, xj - xi)
+                wi += thetai - kd * phiij + (kd - 1) * math.pi / 4
+
+            robot.move(ui + 30, wi)
