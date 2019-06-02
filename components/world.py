@@ -1,7 +1,7 @@
 from components.config import CONFIG
 import math
 import sys
-from components import utilities
+from components import utilities, control_examples
 
 class World():
 
@@ -159,23 +159,6 @@ class World():
         #         robot.move(40, 1)
             
         #     i += 1
-        dc = 20
-        for robot in self.robots:
-            ui = 0
-            wi = 0
-            for neigh in robot.neigh_list:
-                (ot_rid, sens_id, d) = neigh
-                (xi, yi) = robot.get_pose().get_position()
-                thetai = robot.get_pose().get_heading()
-                (xj, yj) = self.robots[ot_rid].get_pose().get_position()
-
-                kd = 1 - math.exp(dc - d * d)
-                gy = ((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
-
-                ui -= gy
-
-                phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
-                # phiij = math.atan2(yj - yi, xj - xi)
-                wi += thetai - kd * phiij + (kd - 1) * math.pi / 4
-
-            robot.move(ui + 30, wi)
+        # control_examples.listmann(self.robots)
+        # control_examples.novischi(self.robots)
+        control_examples.gasparri(self.robots)

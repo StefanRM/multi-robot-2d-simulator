@@ -1,19 +1,32 @@
 import math
 
-def sign(x):
-    if x >= 0:
+def sgn(x):
+    if x > 0:
         return 1.0
+    elif x < 0:
+        return -1.0
     else:
-        return -1
+        return 0.0
 
 # returns an angle between [-pi, pi]
 def normalize_angle(angle):
-    while angle < -math.pi:
+    k = int(abs(angle / (2 * math.pi)))
+    if angle < 0:
+        k = -k
+    angle -= 2 * k * math.pi
+    if angle < -math.pi:
         angle += 2 * math.pi
-    while angle > math.pi:
+    if angle > math.pi:
         angle -= 2 * math.pi
 
     return angle
+
+    # while angle < -math.pi:
+    #     angle += 2 * math.pi
+    # while angle > math.pi:
+    #     angle -= 2 * math.pi
+
+    # return angle
 
 # returns True if midpoint is inside the segment determined by point1 and point2
 def check_point_inside(point1, point2, midpoint):
