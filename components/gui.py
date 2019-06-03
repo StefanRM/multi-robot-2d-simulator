@@ -7,7 +7,7 @@ class Gui:
 
     def __init__(self,
                  robots_trace_col,
-                 robots_dim=CONFIG['robots_dim'],
+                 robots_scale=CONFIG['robots_scale'],
                  period=CONFIG['GUI_PERIOD_TIME'],
                  width=CONFIG['win_width'],
                  height=CONFIG['win_height'],
@@ -22,7 +22,7 @@ class Gui:
         
         self.grid_color = grid_color
         
-        self.robots_dim = robots_dim
+        self.robots_scale = robots_scale
         self.robots_trace_col = robots_trace_col
 
         self.display_traces = False
@@ -46,7 +46,7 @@ class Gui:
     # convert coordinates the window system of coordinates
     def convert_coordinates(self, position):
         (x, y) = position
-        return (self.origin_x + x, self.origin_y - y)
+        return (self.origin_x + self.robots_scale * x, self.origin_y - self.robots_scale * y)
 
     def toggle_display_traces(self):
         self.display_traces = not self.display_traces
@@ -106,9 +106,6 @@ class Gui:
         for it, robot in enumerate(robots):
             trace = world.get_robot_trace(it)
             (x, y) = robot.get_pose().get_position()
-            dimension = self.robots_dim
-            width = dimension["width"]
-            height = dimension["height"]
 
             # drawing the traces
             if self.display_traces:
@@ -122,20 +119,18 @@ class Gui:
         for it, robot in enumerate(robots):
             (x, y) = robot.get_pose().get_position()
             theta = robot.get_pose().get_heading()
-            dimension = self.robots_dim
-            width = dimension["width"]
-            height = dimension["height"]
 
             if self.display_sensors:
                 sensors = robot.get_sensors()
                 for sens in sensors:
                     (x_sens, y_sens) = sens.pose.get_position()
 
-                    sensor_center = (int(x + x_sens), int(y + y_sens))
+                    sensor_center = (x + x_sens, y + y_sens)
+                    sensor_center_conv = self.convert_coordinates(sensor_center)
 
-                    pygame.draw.circle(self.window, CONFIG['colors']['red'], self.convert_coordinates(sensor_center), 3, 3)
+                    pygame.draw.circle(self.window, CONFIG['colors']['red'], (int(sensor_center_conv[0]), int(sensor_center_conv[1])), 3, 3)
 
-                    sensor_points = [self.convert_coordinates(sensor_center)]
+                    sensor_points = [(int(sensor_center_conv[0]), int(sensor_center_conv[1]))]
                     for point in sens.beam_left_points:
                         sensor_points.append(self.convert_coordinates(point.get_position()))
                     sensor_points.append(self.convert_coordinates(sens.max_point.get_position()))
@@ -144,14 +139,14 @@ class Gui:
 
                     pygame.draw.polygon(self.window, CONFIG['colors']['red'], sensor_points, 1)
             
-            # should be modified!
-            radius = int(math.sqrt(width * width + height * height) / 2.0)
-            center = (int(x), int(y))
-            pygame.draw.circle(self.window, CONFIG['colors']['black'], self.convert_coordinates(center), radius, 1)
+            radius = robot.geometry.radius
+            center = (x, y)
+            center_conv = self.convert_coordinates(center)
+            pygame.draw.circle(self.window, CONFIG['colors']['black'], (int(center_conv[0]), int(center_conv[1])), int(radius * self.robots_scale), 1)
 
-            surf = pygame.transform.scale(self.robot_img, (width, height))
+            surf = pygame.transform.scale(self.robot_img, (int(radius * self.robots_scale * math.sqrt(2)), int(radius * self.robots_scale * math.sqrt(2))))
             surf = self.rot_center(surf, math.degrees(theta))
-            self.window.blit(surf, self.convert_coordinates((x - width / 2, y + height / 2))) # the image has bottom left corner as origin now
+            self.window.blit(surf, self.convert_coordinates((x - radius * math.sqrt(2) / 2, y + radius * math.sqrt(2) / 2))) # the image has bottom left corner as origin now
 
         pygame.display.update()
 

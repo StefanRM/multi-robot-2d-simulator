@@ -22,11 +22,7 @@ class DifferentialDriveRobot(Robot):
         self.id = Robot.next_id
         Robot.next_id += 1
 
-        # should be modified!
-        dimension = CONFIG['robots_dim']
-        width = dimension["width"]
-        height = dimension["height"]
-        radius = int(math.sqrt(width * width + height * height) / 2.0)
+        radius = self.geometry.radius
         for it, s in enumerate(self.sensors["proximity"]):
             s.set_id(it)
             s.compute_sensors_points((x, y), radius)
@@ -87,11 +83,7 @@ class DifferentialDriveRobot(Robot):
         self.pose.set_pose(x_new, y_new, theta_new)
 
         # update proximity sensors
-        # should be modified!
-        dimension = CONFIG['robots_dim']
-        width = dimension["width"]
-        height = dimension["height"]
-        radius = int(math.sqrt(width * width + height * height) / 2.0)
+        radius = self.geometry.radius
         for s in self.sensors["proximity"]:
             theta_s = utilities.normalize_angle(theta_new + s.initial_pos)
             s.get_pose().set_pose(radius * math.cos(theta_s), radius * math.sin(theta_s), theta_s)

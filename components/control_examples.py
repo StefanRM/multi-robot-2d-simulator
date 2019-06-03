@@ -2,8 +2,8 @@ import math
 from components import utilities
 
 def listmann(robots):
-    dc = 0.04
-    ud = 10
+    dc = 2
+    ud = 0.1
     thetad = - math.pi / 4
     for robot in robots:
         ui = 0
@@ -15,15 +15,13 @@ def listmann(robots):
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
 
-            d = d / 100
-
             kd = 1 - math.exp(dc - d * d)
             gy = -((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
 
             ui += gy
 
-            phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
-            # phiij = math.atan2(yj - yi, xj - xi)
+            # phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
+            phiij = math.atan2(yj - yi, xj - xi)
             wi += -(thetai - kd * phiij) + (kd - 1) * thetad
 
         print(ui)
@@ -31,13 +29,13 @@ def listmann(robots):
 
 def novischi(robots):
     ku = 1
-    vmax = 2
+    vmax = 0.02
     alfa = 1
-    ud = 10
+    ud = 0.1
     thetad = - math.pi / 4
     ds = 0.2
     kalfa = 1
-    dc = 0.04
+    dc = 1
     for robot in robots:
         ui = 0
         wi = 0
@@ -47,8 +45,6 @@ def novischi(robots):
             (xi, yi) = robot.get_pose().get_position()
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
-
-            d = d / 100
 
             sigma = 2.0 / (1 + math.exp(- (dc - d * d)))
             gy = ((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai))
@@ -59,8 +55,9 @@ def novischi(robots):
                 alfa = 1
 
             ui += utilities.sgn(gy) * (1 - alfa * sigma)
-            phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
 
+            # phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
+            phiij = math.atan2(yj - yi, xj - xi)
             wi += -(thetai - (1 - sigma) * phiij) - sigma * thetad
         
         print(ui)
@@ -69,8 +66,8 @@ def novischi(robots):
         robot.move(ui, wi)
 
 def gasparri(robots):
-    dc = 0.04
-    ud = 10
+    dc = 2
+    ud = 0.1
     thetad = - math.pi / 4
     for robot in robots:
         sum_dist = 1
@@ -83,16 +80,14 @@ def gasparri(robots):
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
 
-            d = d / 100
-
             kd = 1 - math.exp(dc - d * d)
             gy = -((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
             sum_dist += d * d
 
             ui += gy
 
-            phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
-            # phiij = math.atan2(yj - yi, xj - xi)
+            # phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
+            phiij = math.atan2(yj - yi, xj - xi)
             wi += -(thetai - kd * phiij) + (kd - 1) * thetad
 
         print(ui)

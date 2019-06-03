@@ -36,9 +36,6 @@ class World():
     # def get_obstacles(self):
     #     return self.obstacles
 
-    def get_robots_dimensions(self):
-        return self.robots_dimensions
-
     def get_robots_colors(self):
         return self.robots_colors
 
@@ -79,11 +76,7 @@ class World():
             self.robots_traces[it].append((x, y))
 
         # sensors update
-        dimension = CONFIG['robots_dim']
-        width = dimension["width"]
-        height = dimension["height"]
-
-        radius = int(math.sqrt(width * width + height * height) / 2.0)
+        radius = robot.geometry.radius
 
         for robot in self.robots:
             (x, y) = robot.get_pose().get_position()
@@ -151,14 +144,9 @@ class World():
         return False
 
     def control(self):
-        # i = 0
         # for robot in self.robots:
-        #     if i == 3:
         #         robot.move(40, 0.75)
-        #     else:
-        #         robot.move(40, 1)
-            
-        #     i += 1
-        # control_examples.listmann(self.robots)
+
+        control_examples.listmann(self.robots)
         # control_examples.novischi(self.robots)
-        control_examples.gasparri(self.robots)
+        # control_examples.gasparri(self.robots)

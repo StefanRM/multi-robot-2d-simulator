@@ -42,14 +42,10 @@ def main():
     r_geo = Khepera3Geometry()
     robots = []
 
-    # should be modified!
-    dimension = CONFIG['robots_dim']
-    width = dimension["width"]
-    height = dimension["height"]
-    radius = int(math.sqrt(width * width + height * height) / 2.0)
+    radius = r_geo.radius
 
-    robots.append(DifferentialDriveRobot(x=500,
-                                         y=300,
+    robots.append(DifferentialDriveRobot(x=8,
+                                         y=9.5,
                                          geometry=r_geo,
                                          sensors={"encoders"  : [Encoder(r_geo.resolution),
                                                                  Encoder(r_geo.resolution)],
@@ -77,8 +73,8 @@ def main():
                                                                  Sensor(CONFIG['sensor_max_range'],
                                                                         Pose(radius * math.cos(7 * math.pi / 4), radius * math.sin(7 * math.pi / 4), 7 * math.pi / 4),
                                                                         math.pi / 4, 7 * math.pi / 4)]}))
-    robots.append(DifferentialDriveRobot(x=470,
-                                         y=265,
+    robots.append(DifferentialDriveRobot(x=8.5,
+                                         y=7.5,
                                          geometry=r_geo,
                                          sensors={"encoders" : [Encoder(r_geo.resolution),
                                                                 Encoder(r_geo.resolution)],
@@ -106,8 +102,8 @@ def main():
                                                                  Sensor(CONFIG['sensor_max_range'],
                                                                         Pose(radius * math.cos(7 * math.pi / 4), radius * math.sin(7 * math.pi / 4), 7 * math.pi / 4),
                                                                         math.pi / 4, 7 * math.pi / 4)]}))
-    robots.append(DifferentialDriveRobot(x=460,
-                                         y=330,
+    robots.append(DifferentialDriveRobot(x=9,
+                                         y=5.5,
                                          geometry=r_geo,
                                          sensors={"encoders" : [Encoder(r_geo.resolution),
                                                                 Encoder(r_geo.resolution)],
@@ -135,8 +131,8 @@ def main():
                                                                  Sensor(CONFIG['sensor_max_range'],
                                                                         Pose(radius * math.cos(7 * math.pi / 4), radius * math.sin(7 * math.pi / 4), 7 * math.pi / 4),
                                                                         math.pi / 4, 7 * math.pi / 4)]}))
-    robots.append(DifferentialDriveRobot(x=440,
-                                         y=220,
+    robots.append(DifferentialDriveRobot(x=11,
+                                         y=9,
                                          geometry=r_geo,
                                          sensors={"encoders" : [Encoder(r_geo.resolution),
                                                                 Encoder(r_geo.resolution)],

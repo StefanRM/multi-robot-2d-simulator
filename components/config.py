@@ -36,13 +36,13 @@ CONFIG = {
     'DIST_BETWEEN_GRIDS': 1,
     'TRACE_LINE_WIDTH': 2,
 
-    'robots_dim': {"width" : 10, "height" : 10},
+    'robots_scale': 40,
 
     'win_width': 1080,
     'win_height': 720,
 
     'path_to_robot_image': "resources/robot_model_04.png",
 
-    'sensor_max_range': 45,
+    'sensor_max_range': 2.5,
     'sensor_beam_part_points': 3,
 }

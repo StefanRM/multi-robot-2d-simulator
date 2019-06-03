@@ -55,8 +55,8 @@ class Sensor:
         (x_sens, y_sens) = self.pose.get_position()
 
         # should be modified!
-        center = (int(x), int(y))
-        sensor_center = (int(x + x_sens), int(y + y_sens))
+        center = (x, y)
+        sensor_center = (x + x_sens, y + y_sens)
 
         # sensors beams
         (x_c, y_c) = (center[0], center[1])
