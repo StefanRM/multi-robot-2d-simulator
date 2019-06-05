@@ -5,7 +5,7 @@ CONFIG = {
         'red': (255, 0, 0),
         'lime': (0, 255, 0),
         'blue': (0, 0, 255),
-        'yellow': (255, 255, 0),
+        'yellow': (255, 215, 0),
         'magenta': (255, 0, 255),
         'cyan': (0, 255, 255),
         'white': (255, 255, 255),
@@ -32,17 +32,19 @@ CONFIG = {
     'DISP_GRID_KEY': pygame.K_g,
     'DISP_SENSORS_KEY': pygame.K_s,
 
-    'GRID_CELL_DIM': 20,
+    'GRID_CELL_DIM': 19,
     'DIST_BETWEEN_GRIDS': 1,
     'TRACE_LINE_WIDTH': 2,
+    'AXIS_LINE_WIDTH': 5,
+    'UNIT_LINE_WIDTH': 3,
 
-    'robots_scale': 40,
+    'robots_scale': 60,
 
     'win_width': 1080,
     'win_height': 720,
 
     'path_to_robot_image': "resources/robot_model_04.png",
 
-    'sensor_max_range': 2.5,
-    'sensor_beam_part_points': 3,
+    'sensor_max_range': 10,
+    'sensor_beam_part_points': 7,
 }

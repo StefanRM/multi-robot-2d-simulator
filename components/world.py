@@ -58,9 +58,9 @@ class World():
              b) control
                 -> each robot move
         '''
-
-        if self.update():
-            print("Collision occured!")
+        (cond, r1_id, r2_id) = self.update()
+        if cond:
+            print("Collision occured! (robots: {} & {})".format(r1_id, r2_id))
             return True
 
         self.control()
@@ -91,7 +91,7 @@ class World():
                 
                 if robot != other_robot:
                     if utilities.check_robot_collision((x, y), other_robot.get_pose().get_position(), radius):
-                        return True
+                        return (True, robot.id, other_robot.id)
                         # pass
                     for sens in sensors:
                         (x_sens, y_sens) = sens.pose.get_position()
@@ -141,12 +141,12 @@ class World():
             # print("{}: {}".format(robot.id, neigh_detected))
             robot.neigh_list = neigh_detected
         
-        return False
+        return (False, -1, -1)
 
     def control(self):
         # for robot in self.robots:
         #         robot.move(40, 0.75)
 
-        control_examples.listmann(self.robots)
-        # control_examples.novischi(self.robots)
+        # control_examples.listmann(self.robots)
+        control_examples.novischi(self.robots)
         # control_examples.gasparri(self.robots)

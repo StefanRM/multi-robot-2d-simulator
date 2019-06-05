@@ -66,6 +66,15 @@ class Gui:
             elif event.type == pygame.VIDEORESIZE:
                 self.window=pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
 
+                # update the new width and height
+                (width, height) = event.dict['size']
+                self.width = width
+                self.height = height
+
+                # origin of the axis for a 4 quadrant map
+                self.origin_x = 0
+                self.origin_y = height
+
 
         keys = pygame.key.get_pressed()
 
@@ -96,7 +105,33 @@ class Gui:
             self.window.fill(self.grid_color)
             for i in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
                 for j in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
-                    pygame.draw.rect(self.window, self.background_color, (i, j, CONFIG['GRID_CELL_DIM'], CONFIG['GRID_CELL_DIM']))
+                    pygame.draw.rect(self.window, self.background_color, (i, self.origin_y - j, CONFIG['GRID_CELL_DIM'], CONFIG['GRID_CELL_DIM']))
+            
+            # font and size of axis' numbers
+            text_font = pygame.font.Font('freesansbold.ttf', 15)
+
+            # OX axis
+            pygame.draw.line(self.window, CONFIG['colors']['gray'], (self.origin_x, self.origin_y), (self.origin_x + self.width, self.origin_y), CONFIG['AXIS_LINE_WIDTH'])
+            for i in range(0, self.width, CONFIG['robots_scale']):
+                pygame.draw.line(self.window, CONFIG['colors']['gray'], (i - 1/2, self.origin_y), (i - 1/2, self.origin_y - 10), CONFIG['UNIT_LINE_WIDTH'])
+                
+                if i > 0:
+                    text_surface = text_font.render(str(int(i / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
+                    text_surf, text_rect = text_surface, text_surface.get_rect()
+                    text_rect.center = (i - 1/2, self.origin_y - 15)
+                    self.window.blit(text_surf, text_rect)
+
+            # OY axis
+            pygame.draw.line(self.window, CONFIG['colors']['gray'], (self.origin_x, self.origin_y), (self.origin_x, self.origin_y - self.height), CONFIG['AXIS_LINE_WIDTH'])
+            for j in range(0, self.height, CONFIG['robots_scale']):
+                pygame.draw.line(self.window, CONFIG['colors']['gray'], (self.origin_x, self.origin_y - j - 1/2), (self.origin_x + 10, self.origin_y - j - 1/2), CONFIG['UNIT_LINE_WIDTH'])
+                
+                if j > 0:
+                    text_surface = text_font.render(str(int(j / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
+                    text_surf, text_rect = text_surface, text_surface.get_rect()
+                    text_rect.center = (self.origin_x + 15, self.origin_y - j - 1/2)
+                    self.window.blit(text_surf, text_rect)
+
         else:
             self.window.fill(self.background_color)
 
