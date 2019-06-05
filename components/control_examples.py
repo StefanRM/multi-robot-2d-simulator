@@ -3,7 +3,7 @@ from components import utilities
 
 def listmann(robots):
     dc = 2.0
-    ud = 0.3
+    ud = 0.2
     thetad = - math.pi / 4
     for robot in robots:
         ui = 0
@@ -29,7 +29,7 @@ def listmann(robots):
 
 def novischi(robots):
     ku = 1.0
-    ud = 0.3
+    ud = 0.2
     vmax = 0.2
     alfa = 1
     thetad = - math.pi / 4
@@ -67,7 +67,7 @@ def novischi(robots):
 
 def gasparri(robots):
     dc = 2.0
-    ud = 0.3
+    ud = 0.2
     thetad = - math.pi / 4
     for robot in robots:
         sum_dist = 0.0

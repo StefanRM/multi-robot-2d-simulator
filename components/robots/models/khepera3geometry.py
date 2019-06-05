@@ -5,4 +5,4 @@ class Khepera3Geometry:
         self.robot_base = 0.021 # meters
         self.max_speed = 0.3148 # meters / seconds
         self.resolution = 2765 # ticks / 2pi
-        self.radius = 0.13 # meters
+        self.radius = 0.065 # meters
