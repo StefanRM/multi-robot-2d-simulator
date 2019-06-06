@@ -3,7 +3,7 @@ from components import utilities
 
 def listmann(robots):
     dc = 2.0
-    ud = 0.2
+    ud = 0.7
     thetad = - math.pi / 4
     for robot in robots:
         ui = 0
@@ -15,7 +15,7 @@ def listmann(robots):
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
 
-            kd = 1 - math.exp(dc - d * d)
+            kd = 1 - math.exp(dc*dc - d * d)
             gy = -((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
 
             ui += gy
@@ -23,18 +23,20 @@ def listmann(robots):
             phiij = robot.get_sensors()[sens_id].get_pose().get_heading()
             # phiij = math.atan2(yj - yi, xj - xi)
             wi += -(thetai - kd * phiij) + (kd - 1) * thetad
+        # wi = math.atan2(math.sin(wi), math.cos(wi))
+        # wi = utilities.normalize_angle(wi)
 
         print(ui)
         robot.move(ui + ud, wi)
 
 def novischi(robots):
     ku = 1.0
-    ud = 0.2
+    ud = 0.7
     vmax = 0.2
     alfa = 1
     thetad = - math.pi / 4
     ds = 0.5
-    kalfa = 2.0
+    kalfa = 3.0
     dc = 2.0
     for robot in robots:
         ui = 0
@@ -46,7 +48,7 @@ def novischi(robots):
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
 
-            sigma = 2.0 / (1 + math.exp(- (dc - d * d)))
+            sigma = 2.0 / (1 + math.exp(- (dc*dc - d * d)))
             gy = ((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai))
 
             if (d <= ds):
@@ -67,7 +69,7 @@ def novischi(robots):
 
 def gasparri(robots):
     dc = 2.0
-    ud = 0.2
+    ud = 0.7
     thetad = - math.pi / 4
     for robot in robots:
         sum_dist = 0.0
@@ -80,7 +82,7 @@ def gasparri(robots):
             thetai = robot.get_pose().get_heading()
             (xj, yj) = robots[ot_rid].get_pose().get_position()
 
-            kd = 1 - math.exp(dc - d * d)
+            kd = 1 - math.exp(dc*dc - d * d)
             gy = -((xi - xj) * math.cos(thetai) + (yi - yj) * math.sin(thetai)) * kd
             sum_dist += d
 

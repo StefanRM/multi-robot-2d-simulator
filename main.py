@@ -32,16 +32,25 @@ class Simulation:
         last_time = 0
         collision = False
 
-        while self.gui.load_frame(self.world):
+        while True:
+            (running, pause) = self.gui.load_frame(self.world)
+
             if last_time != int(self.world.get_time()):
                 print("TIME: {} s".format(last_time))
                 last_time += 1
             
-            if not collision:
+            if (not collision) and (not pause):
               collision = self.world.step()
+
+            if running is False:
+                 break
 
 def init_sensors(r_geo):
        radius = r_geo.radius
+
+       sens_arc_len = CONFIG['sensor_max_range'] * math.pi / 4.0
+
+       CONFIG['sensor_beam_part_points'] = int(sens_arc_len / radius)
 
        return {"encoders"  : [Encoder(r_geo.resolution),
                               Encoder(r_geo.resolution)],
@@ -78,30 +87,30 @@ def main():
     radius = r_geo.radius
 
     # Atraction (aggegation): distance between robots is greater than dc (= 2.0)
-    robots.append(DifferentialDriveRobot(x=2.5, y=3, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=3, y=7.5, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=4.5, y=11, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=5, y=5, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=7, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=7.5, y=8, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=8, y=11, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=8.5, y=4.5, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=10.5, y=8.5, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=11.5, y=5, geometry=r_geo, sensors=init_sensors(r_geo)))
-    robots.append(DifferentialDriveRobot(x=12.5, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=2.5, y=3, geometry=r_geo, sensors=init_sensors(r_geo))) # activ
+#     robots.append(DifferentialDriveRobot(x=3, y=7.5, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=4.5, y=11, geometry=r_geo, sensors=init_sensors(r_geo))) # activ
+#     robots.append(DifferentialDriveRobot(x=5, y=5, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=7, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=7.5, y=8, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=8, y=11, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=8.5, y=4.5, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=10.5, y=8.5, geometry=r_geo, sensors=init_sensors(r_geo)))
+#     robots.append(DifferentialDriveRobot(x=11.5, y=5, geometry=r_geo, sensors=init_sensors(r_geo))) # activ
+#     robots.append(DifferentialDriveRobot(x=12.5, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
 
     # Repulsion (dispersion): distance between robots is smaller than dc (= 2.0)
-#     robots.append(DifferentialDriveRobot(x=3, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3, y=2.4, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3, y=2.9, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.25, y=2.65, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.4, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.4, y=2.4, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.4, y=2.9, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.7, y=2.2, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.9, y=2, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.9, y=2.4, geometry=r_geo, sensors=init_sensors(r_geo)))
-#     robots.append(DifferentialDriveRobot(x=3.9, y=2.9, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=4.2, y=4, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5, y=4, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5.8, y=4, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=4.2, y=5.2, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5, y=5.2, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5.8, y=5.2, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=4.2, y=6.4, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5, y=6.4, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5.8, y=6.3, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=3.7, y=2.7, geometry=r_geo, sensors=init_sensors(r_geo)))
+    robots.append(DifferentialDriveRobot(x=5.8, y=2.9, geometry=r_geo, sensors=init_sensors(r_geo)))
 
     return robots
 

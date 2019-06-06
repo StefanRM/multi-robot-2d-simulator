@@ -31,6 +31,7 @@ CONFIG = {
     'DISP_TRACES_KEY': pygame.K_t,
     'DISP_GRID_KEY': pygame.K_g,
     'DISP_SENSORS_KEY': pygame.K_s,
+    'PAUSE_SIM_KEY': pygame.K_p,
 
     'GRID_CELL_DIM': 19,
     'DIST_BETWEEN_GRIDS': 1,
@@ -38,13 +39,18 @@ CONFIG = {
     'AXIS_LINE_WIDTH': 5,
     'UNIT_LINE_WIDTH': 3,
 
-    'robots_scale': 60,
+    'DIST_BUTTONS' : 40,
+    'TEXT_DIM_HEIGHT' : 35,
+    'TEXT_DIM_WIDTH' : 100,
+    'TEXT_MARGIN_UP' : 4,
+
+    'robots_scale': 40,
 
     'win_width': 1080,
     'win_height': 720,
 
     'path_to_robot_image': "resources/robot_model_04.png",
 
-    'sensor_max_range': 10,
-    'sensor_beam_part_points': 7,
+    'sensor_max_range': 3.2,
+    'sensor_beam_part_points': 1,
 }

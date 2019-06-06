@@ -35,9 +35,18 @@ class DifferentialDriveRobot(Robot):
         r = self.geometry.wheel_radius
         l = self.geometry.robot_base
         max_speed = self.geometry.max_speed
+        max_ang_speed = self.geometry.max_ang_speed
 
         # TODO: the total speed cannot be greater than the maximum possible speed --> limit it
         v = max(min(v, max_speed), -max_speed)
+        omega = max(min(omega, max_ang_speed), -max_ang_speed)
+        # if omega == 0:
+        #     v = max(min(v, max_speed), -max_speed)
+        # else:
+        #     r = abs(v / omega)
+        #     if (abs(v) >= max_speed):
+        #         v = utilities.sgn(v) * max_speed / 2.0
+        #         omega = utilities.sgn(omega) * v / r
 
         # TODO: Compute the left/right wheel angular speeds: (v, omega) --> (wl, wr)
         wl = (2 * v - omega * l) / (2 * r)

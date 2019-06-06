@@ -25,8 +25,8 @@ class Gui:
         self.robots_scale = robots_scale
         self.robots_trace_col = robots_trace_col
 
-        self.display_traces = False
-        self.display_grid = False
+        self.display_traces = True
+        self.display_grid = True
         self.display_sensors = False
         self.press_limiter_toggle_display_traces = False
         self.press_limiter_toggle_display_grid = False
@@ -38,10 +38,36 @@ class Gui:
 
         # origin of the axis for a 4 quadrant map
         self.origin_x = 0
-        self.origin_y = height
+        self.origin_y = height - CONFIG['DIST_BUTTONS']
 
         # robot symbol
         self.robot_img = pygame.image.load(CONFIG['path_to_robot_image'])
+
+        # font and size of axis' numbers and buttons' texts
+        self.text_font = pygame.font.Font('freesansbold.ttf', 15)
+
+        # pause simulation
+        self.pause = False
+    
+    def toggle_pause(self):
+        self.pause = not self.pause
+    
+    def button(self, msg, x, y, w, h, before_col, after_col, action=None):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+
+        if x + w > mouse[0] > x and y + h > mouse[1] > y:
+            pygame.draw.rect(self.window, after_col, (x, y, w, h))
+
+            if click[0] == 1 and action != None:
+                action()         
+        else:
+            pygame.draw.rect(self.window, before_col, (x , y, w, h))
+
+        text_surface = self.text_font.render(msg, True, CONFIG['colors']['white'])
+        text_rect = text_surface.get_rect()
+        text_rect.center = ((x + (w / 2)), (y + (h / 2)))
+        self.window.blit(text_surface, text_rect)
     
     # convert coordinates the window system of coordinates
     def convert_coordinates(self, position):
@@ -62,7 +88,7 @@ class Gui:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                return (False, self.pause)
             elif event.type == pygame.VIDEORESIZE:
                 self.window=pygame.display.set_mode(event.dict['size'], pygame.HWSURFACE | pygame.DOUBLEBUF | pygame.RESIZABLE)
 
@@ -73,7 +99,7 @@ class Gui:
 
                 # origin of the axis for a 4 quadrant map
                 self.origin_x = 0
-                self.origin_y = height
+                self.origin_y = height - CONFIG['DIST_BUTTONS']
 
 
         keys = pygame.key.get_pressed()
@@ -98,17 +124,21 @@ class Gui:
                 self.press_limiter_toggle_display_sensors = True
         else:
             self.press_limiter_toggle_display_sensors = False
+
+        if keys[CONFIG['PAUSE_SIM_KEY']]:
+            if not self.press_limiter_toggle_pause:
+                self.toggle_pause()
+                self.press_limiter_toggle_pause = True
+        else:
+            self.press_limiter_toggle_pause = False
             
 
         # drawing the grid
         if self.display_grid:
             self.window.fill(self.grid_color)
             for i in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
-                for j in range(0, self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
+                for j in range(CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM'], self.width, CONFIG['DIST_BETWEEN_GRIDS'] + CONFIG['GRID_CELL_DIM']):
                     pygame.draw.rect(self.window, self.background_color, (i, self.origin_y - j, CONFIG['GRID_CELL_DIM'], CONFIG['GRID_CELL_DIM']))
-            
-            # font and size of axis' numbers
-            text_font = pygame.font.Font('freesansbold.ttf', 15)
 
             # OX axis
             pygame.draw.line(self.window, CONFIG['colors']['gray'], (self.origin_x, self.origin_y), (self.origin_x + self.width, self.origin_y), CONFIG['AXIS_LINE_WIDTH'])
@@ -116,7 +146,7 @@ class Gui:
                 pygame.draw.line(self.window, CONFIG['colors']['gray'], (i - 1/2, self.origin_y), (i - 1/2, self.origin_y - 10), CONFIG['UNIT_LINE_WIDTH'])
                 
                 if i > 0:
-                    text_surface = text_font.render(str(int(i / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
+                    text_surface = self.text_font.render(str(int(i / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
                     text_surf, text_rect = text_surface, text_surface.get_rect()
                     text_rect.center = (i - 1/2, self.origin_y - 15)
                     self.window.blit(text_surf, text_rect)
@@ -127,7 +157,7 @@ class Gui:
                 pygame.draw.line(self.window, CONFIG['colors']['gray'], (self.origin_x, self.origin_y - j - 1/2), (self.origin_x + 10, self.origin_y - j - 1/2), CONFIG['UNIT_LINE_WIDTH'])
                 
                 if j > 0:
-                    text_surface = text_font.render(str(int(j / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
+                    text_surface = self.text_font.render(str(int(j / CONFIG['robots_scale'])), True, CONFIG['colors']['gray'])
                     text_surf, text_rect = text_surface, text_surface.get_rect()
                     text_rect.center = (self.origin_x + 15, self.origin_y - j - 1/2)
                     self.window.blit(text_surf, text_rect)
@@ -150,7 +180,11 @@ class Gui:
                     start = self.convert_coordinates((a, b))
                     stop = self.convert_coordinates((c, d))
                     pygame.draw.line(self.window, self.robots_trace_col[it], start, stop, CONFIG['TRACE_LINE_WIDTH'])
-            
+        
+        # drawing the buttons
+        self.button("Play / Pause", self.origin_x + self.width / 2, self.origin_y + CONFIG['TEXT_MARGIN_UP'], CONFIG['TEXT_DIM_WIDTH'], CONFIG['TEXT_DIM_HEIGHT'], CONFIG['colors']['green'], CONFIG['colors']['lime'], self.toggle_pause)
+
+
         for it, robot in enumerate(robots):
             (x, y) = robot.get_pose().get_position()
             theta = robot.get_pose().get_heading()
@@ -185,7 +219,7 @@ class Gui:
 
         pygame.display.update()
 
-        return True
+        return (True, self.pause)
     
     def rot_center(self, image, angle):
         # rotate an image while keeping its center and size

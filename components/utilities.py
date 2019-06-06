@@ -11,7 +11,7 @@ def sgn(x):
 # returns an angle between [-pi, pi]
 def normalize_angle(angle):
     k = int(abs(angle / (2 * math.pi)))
-    if angle < 0:
+    if angle <= 0:
         k = -k
     angle -= 2 * k * math.pi
     if angle < -math.pi:

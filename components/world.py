@@ -148,5 +148,5 @@ class World():
         #         robot.move(40, 0.75)
 
         # control_examples.listmann(self.robots)
-        control_examples.novischi(self.robots)
-        # control_examples.gasparri(self.robots)
+        # control_examples.novischi(self.robots)
+        control_examples.gasparri(self.robots)
